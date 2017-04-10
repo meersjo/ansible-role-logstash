@@ -3,20 +3,31 @@
     logstash_dir: /opt/logstash
   when: logstash_repo_version ==  '2.x'
 - set_fact:
-    logstash_dir: /usr/share/logstash
+    logstash_dir: /opt/logstash
   when: logstash_repo_version ==  '5.x'
 
+- set_fact:
+    logstash_plugin: logstash-plugin
+  when: logstash_repo_version ==  '2.x'
+- set_fact:
+    logstash_plugin: plugin
+  when: logstash_repo_version ==  '5.x'
+
+# Logstash plugins can only be contrib for 5.2.2
 - name: Get list of installed plugins.
   command: >
-    ./bin/logstash-plugin list
+    ./bin/{{ logstash_plugin }} list
     chdir={{ logstash_dir }}
   register: logstash_plugins_list
   changed_when: false
+  when: logstash_repo_version ==  '2.x'
 
 - name: Install configured plugins.
   command: >
-    ./bin/logstash-plugin install {{ item }}
+    ./bin/{{ logstash_plugin }} install {{ item }}
     chdir={{ logstash_dir }}
   with_items: "{{ logstash_install_plugins }}"
-  when: "item not in logstash_plugins_list.stdout"
+  when:
+    - logstash_repo_version ==  '2.x'
+    - "item not in logstash_plugins_list.stdout"
   notify: restart logstash
