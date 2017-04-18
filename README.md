@@ -1,10 +1,13 @@
 # Ansible Role: Logstash
 
-[![Build Status](https://travis-ci.org/geerlingguy/ansible-role-logstash.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-logstash)
-
 An Ansible Role that installs Logstash on RedHat/CentOS Debian/Ubuntu.
 
 Note that this role installs a syslog grok pattern by default; if you want to add more filters, please add them inside the `/etc/logstash/conf.d/` directory. As an example, you could create a file named `13-myapp.conf` with the appropriate grok filter and restart logstash to start using it. Test your grok regex using the [Grok Debugger](http://grokdebug.herokuapp.com/).
+
+## Origin
+This role was built using geerlingguy/ansible-role-logstash as base, augmented with specific changes from juju4/ansible-role-logstash to enable Logstash 5 support, and then some more changes to make it work in my specific environment. I suspect it will work in most environments, but ymmv.
+
+I specifically build my parts towards Debian hosts; so on Redhat, no guarantees whatsoeveer. If I do many more changes, I might remove support entirely at some point - no use in keeping unmaintained code around.
 
 ## Requirements
 
